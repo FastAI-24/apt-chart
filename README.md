@@ -1,73 +1,24 @@
-# React + TypeScript + Vite
+# 서울 아파트 실거래가 대시보드
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+서울 아파트 실거래가 예측 ML 프로젝트의 시각화 대시보드입니다. 2007~2023년 서울 25개 구 거래 데이터를 시각화합니다.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 1. 탭 기능
 
-## React Compiler
+|          탭          | 내용                                                   |
+| :------------------: | ------------------------------------------------------ |
+|     📊 기본 분석     | 연도별·월별 거래량·평균가, 구별 분포, 면적-가격 산점도 |
+|   🕐 시간 파생변수   | 계약월·분기·반기별 가격 추이                           |
+|   🏢 건물 파생변수   | 건물 연식 구간, 재건축 후보, 층구간·면적대별 가격      |
+|   📍 공간 파생변수   | 강남역·서울시청·여의도 거리, 구 중심 좌표              |
+| 🔗 교호작용 파생변수 | 면적×층, 면적/건물나이, 주차비율, 동당세대수           |
+|   🧪 모델링 & 실험   | 실험 이력, 피처 중요도, 앙상블 구조                    |
+|       💬 댓글        | Utterances 기반 GitHub Issues 댓글                     |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 2. 팀
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| 이름   | GitHub                                            |
+| ------ | ------------------------------------------------- |
+| 송민성 | [alstjd0051](https://github.com/alstjd0051)       |
+| 서휘림 | [aibc24-hwirim](https://github.com/aibc24-hwirim) |
