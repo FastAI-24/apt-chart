@@ -79,11 +79,6 @@ function CommentSection({
       ? `${window.location.origin}${window.location.pathname}#${sectionId}`
       : "";
 
-  const copyLink = useCallback(() => {
-    if (!sectionUrl) return;
-    navigator.clipboard.writeText(sectionUrl);
-  }, [sectionUrl]);
-
   return (
     <section
       id={sectionId}
@@ -98,23 +93,16 @@ function CommentSection({
             <p className="mt-1 text-sm text-gray-500">{question.description}</p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={copyLink}
-          className="shrink-0 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
-          title="이 섹션 링크 복사"
-        >
-          링크 복사
-        </button>
       </div>
 
       <div className="mb-6">
         <TopicChart topicId={question.id} data={data} />
       </div>
 
-      <div className="pt-4 border-t border-gray-100">
-        <h4 className="mb-3 text-sm font-semibold text-gray-700">댓글</h4>
-        <UtterancesComments issueTerm={issueTerm} />
+      <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50/50 overflow-hidden">
+        <div className="p-4 bg-white min-h-[320px]">
+          <UtterancesComments issueTerm={issueTerm} />
+        </div>
       </div>
     </section>
   );

@@ -32,11 +32,14 @@ export const UtterancesComments = memo(function UtterancesComments({
   }, [issueTerm]);
 
   return (
-    <div className="w-full">
+    <div className="w-full utterances-wrapper">
       {title && (
         <h4 className="mb-3 text-sm font-semibold text-gray-700">{title}</h4>
       )}
-      <div ref={containerRef} className="min-h-[200px] w-full" />
+      <div
+        ref={containerRef}
+        className="min-h-[280px] w-full [&>iframe]:rounded-lg [&>iframe]:border [&>iframe]:border-gray-200 [&>iframe]:shadow-sm"
+      />
     </div>
   );
 });
