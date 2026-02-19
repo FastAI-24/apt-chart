@@ -130,4 +130,4 @@ export interface SummaryData {
   };
 }
 
-export type TabId = "overview" | "temporal" | "building" | "spatial" | "interaction" | "modeling";
+export type TabId = "overview" | "temporal" | "building" | "spatial" | "interaction" | "modeling" | "comments";
