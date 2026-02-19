@@ -4,6 +4,23 @@ import { useChartDimensions } from "./useChartDimensions";
 import { useTooltipHandlers } from "./useTooltipHandlers";
 import { useEntryAnimation } from "./useEntryAnimation";
 
+const MAX_POINTS = 800;
+
+/** 대량 데이터 시 시각화용 균등 샘플링 (분포 유지) */
+function sampleScatterData<T extends { x: number; y: number }>(
+  data: T[],
+  maxPoints: number
+): T[] {
+  if (data.length <= maxPoints) return data;
+  const step = data.length / maxPoints;
+  const sampled: T[] = [];
+  for (let i = 0; i < maxPoints; i++) {
+    const idx = Math.min(Math.floor(i * step), data.length - 1);
+    sampled.push(data[idx]);
+  }
+  return sampled;
+}
+
 interface Props {
   data: { x: number; y: number }[];
   color?: string;
@@ -28,7 +45,12 @@ export const D3ScatterChart = memo(function D3ScatterChart({
   const margin = { top: 20, right: 20, bottom: 50, left: 60 };
   const { containerRef, width, innerWidth, innerHeight } = useChartDimensions(margin, height);
   const { onHover, onLeave } = useTooltipHandlers();
-  const animated = useEntryAnimation(data.length, innerWidth);
+
+  const displayData = useMemo(
+    () => sampleScatterData(data, MAX_POINTS),
+    [data],
+  );
+  const animated = useEntryAnimation(displayData.length, innerWidth);
   const [hovered, setHovered] = useState<{ x: number; y: number } | null>(null);
 
   const { xScale, yScale } = useMemo(() => {
@@ -44,8 +66,8 @@ export const D3ScatterChart = memo(function D3ScatterChart({
   const yTicks = yScale.ticks(5);
 
   const quadtree = useMemo(
-    () => d3.quadtree<{ x: number; y: number }>().x((d) => d.x).y((d) => d.y).addAll(data),
-    [data],
+    () => d3.quadtree<{ x: number; y: number }>().x((d) => d.x).y((d) => d.y).addAll(displayData),
+    [displayData],
   );
 
   const handleMouseMove = useCallback(
@@ -90,9 +112,9 @@ export const D3ScatterChart = memo(function D3ScatterChart({
             </g>
           ))}
 
-          {data.map((d, i) => (
+          {displayData.map((d, i) => (
             <circle
-              key={i}
+              key={`${d.x}-${d.y}-${i}`}
               cx={xScale(d.x)}
               cy={yScale(d.y)}
               r={animated ? 2.5 : 0}

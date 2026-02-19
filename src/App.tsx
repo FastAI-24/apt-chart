@@ -1,15 +1,16 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, lazy, Suspense } from "react";
 import { useDashboardStore } from "./store/dashboardStore";
 import { Tooltip } from "./components/Tooltip";
-import { OverviewPage } from "./pages/OverviewPage";
-import { TemporalPage } from "./pages/TemporalPage";
-import { BuildingPage } from "./pages/BuildingPage";
-import { SpatialPage } from "./pages/SpatialPage";
-import { InteractionPage } from "./pages/InteractionPage";
-import { ModelingPage } from "./pages/ModelingPage";
-import { CommentsPage } from "./pages/CommentsPage";
 import { TeamMembers } from "./components/TeamMembers";
 import type { TabId } from "./types";
+
+const OverviewPage = lazy(() => import("./pages/OverviewPage").then((m) => ({ default: m.OverviewPage })));
+const TemporalPage = lazy(() => import("./pages/TemporalPage").then((m) => ({ default: m.TemporalPage })));
+const BuildingPage = lazy(() => import("./pages/BuildingPage").then((m) => ({ default: m.BuildingPage })));
+const SpatialPage = lazy(() => import("./pages/SpatialPage").then((m) => ({ default: m.SpatialPage })));
+const InteractionPage = lazy(() => import("./pages/InteractionPage").then((m) => ({ default: m.InteractionPage })));
+const ModelingPage = lazy(() => import("./pages/ModelingPage").then((m) => ({ default: m.ModelingPage })));
+const CommentsPage = lazy(() => import("./pages/CommentsPage").then((m) => ({ default: m.CommentsPage })));
 
 const TABS: { id: TabId; label: string; icon: string }[] = [
   { id: "overview", label: "기본 분석", icon: "📊" },
@@ -43,7 +44,12 @@ function App() {
   const showError = (error || !data) && !showCommentsOnly;
 
   const renderMainContent = () => {
-    if (activeTab === "comments") return <CommentsPage />;
+    if (activeTab === "comments")
+      return (
+        <Suspense fallback={<div className="flex justify-center py-24"><div className="w-10 h-10 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" /></div>}>
+          <CommentsPage />
+        </Suspense>
+      );
     if (showLoading)
       return (
         <div className="flex items-center justify-center py-24">
@@ -65,12 +71,17 @@ function App() {
         </div>
       );
     if (data) {
-      if (activeTab === "overview") return <OverviewPage data={data} />;
-      if (activeTab === "temporal") return <TemporalPage data={data} />;
-      if (activeTab === "building") return <BuildingPage data={data} />;
-      if (activeTab === "spatial") return <SpatialPage data={data} />;
-      if (activeTab === "interaction") return <InteractionPage data={data} />;
-      if (activeTab === "modeling") return <ModelingPage data={data} />;
+      const fallback = (
+        <div className="flex items-center justify-center py-24">
+          <div className="w-10 h-10 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+      );
+      if (activeTab === "overview") return <Suspense fallback={fallback}><OverviewPage data={data} /></Suspense>;
+      if (activeTab === "temporal") return <Suspense fallback={fallback}><TemporalPage data={data} /></Suspense>;
+      if (activeTab === "building") return <Suspense fallback={fallback}><BuildingPage data={data} /></Suspense>;
+      if (activeTab === "spatial") return <Suspense fallback={fallback}><SpatialPage data={data} /></Suspense>;
+      if (activeTab === "interaction") return <Suspense fallback={fallback}><InteractionPage data={data} /></Suspense>;
+      if (activeTab === "modeling") return <Suspense fallback={fallback}><ModelingPage data={data} /></Suspense>;
     }
     return null;
   };

@@ -17,17 +17,24 @@ export function useChartDimensions(margin: Margin = DEFAULT_MARGIN, minHeight = 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const updateWidth = (w: number) => {
+      if (w > 0) setWidth(w);
+    };
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        const w = entry.contentRect.width;
-        // display:none 등으로 width가 0일 때는 업데이트하지 않음 (이전 값 유지)
-        if (w > 0) setWidth(w);
+        updateWidth(entry.contentRect.width);
       }
     });
     ro.observe(el);
-    const initialW = el.clientWidth;
-    if (initialW > 0) setWidth(initialW);
-    return () => ro.disconnect();
+    updateWidth(el.clientWidth);
+    // 첫 페인트 후 레이아웃이 안정될 때 재측정 (탭 전환/그리드 등)
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(() => updateWidth(el.clientWidth));
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
   }, []);
 
   const innerWidth = Math.max(width - margin.left - margin.right, 100);

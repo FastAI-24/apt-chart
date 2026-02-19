@@ -41,7 +41,7 @@ export const D3LineChart = memo(function D3LineChart({ series, yFormat = (v) => 
 
   useEffect(() => {
     pathRefs.current.forEach((path) => {
-      if (!path) return;
+      if (!path || !path.getTotalLength) return;
       const totalLen = path.getTotalLength();
       path.style.strokeDasharray = `${totalLen}`;
       path.style.strokeDashoffset = `${totalLen}`;
@@ -53,6 +53,8 @@ export const D3LineChart = memo(function D3LineChart({ series, yFormat = (v) => 
 
   const yTicks = yScale.ticks(5);
   const labelInterval = Math.max(1, Math.floor(allX.length / 12));
+  const totalPoints = series.reduce((sum, s) => sum + s.values.length, 0);
+  const showAllCircles = totalPoints <= 100;
 
   const handleOverlayMove = useCallback(
     (e: React.MouseEvent<SVGRectElement>) => {
@@ -123,6 +125,7 @@ export const D3LineChart = memo(function D3LineChart({ series, yFormat = (v) => 
               />
               {s.values.map((v) => {
                 const isActive = hoveredX === v.x;
+                if (!showAllCircles && !isActive) return null;
                 return (
                   <g key={`${s.label}-${v.x}`}>
                     {isActive && (
