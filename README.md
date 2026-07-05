@@ -20,5 +20,5 @@
 
 | 이름   | GitHub                                            |
 | ------ | ------------------------------------------------- |
-| 송민성 | [alstjd0051](https://github.com/asyncFlow-dad)       |
+| 송민성 | [asyncFlow-dad/](https://github.com/asyncFlow-dad)       |
 | 서휘림 | [aibc24-hwirim](https://github.com/aibc24-hwirim) |
